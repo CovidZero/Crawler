@@ -13,6 +13,7 @@
 ## Pré-requisitos
 - 1 - Ambiente Windows, Linux ou Mac(Python3 (Core) ou Anaconda)
 - 2 - Bibliotecas Python(urllib3, bs4(BeautifulSoup), lxml
+- 3 - Base de [Estados](https://github.com/CovidZeroNews/Arquivo), faça o download e mova para a pasta do Crawler
 
 ## Instalando Python ou Anaconda
 - 1 - [Python3](https://www.python.org/downloads/)
