@@ -7,11 +7,8 @@
 import urllib3
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-import re
 import datetime
-import time
 import os
-
 import subprocess as cmd
 
 #Projeto https://covidzero.com.br/
@@ -127,20 +124,10 @@ if __name__ == '__main__':
                 sites = LerArquivo(fullpath)
                 crawl(sites,1,pathSub)
     
-    #Commit no Git
-    cp = cmd.run("git add .", check=True, shell=True)
-    cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
-    cp = cmd.run(f"git push origin crawler_sites -f", check=True, shell=True)
-
-
-# In[9]:
-
-
-
-
-
-# In[11]:
-
-
-
+    #Importante adicionar [O upstream]  git remote add upstream {reposiorio de Arquivos}
+    #Commit no Git upstream
+    #cp = cmd.run("git remote add upstream {link aqui}", check=True, shell=True)
+    #cp = cmd.run("git add Estados", check=True, shell=True)
+    #cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
+    #cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
 

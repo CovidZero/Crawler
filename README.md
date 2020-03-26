@@ -34,12 +34,22 @@ git clone -b crawler_sties {link repository}
 - 4 - Python Core - Arquivo CovidZero_Crawlers_v0.py
 
 #### IMPORTANTE
-No final da coleta ele vai commitar no repósitorio, se tiver testando recomendo comentar as linhas dos arquivos "CovidZero - Crawlers -v0.ipynb" e Arquivo CovidZero_Crawlers_v0.py:
+- 1 - Arquivos "CovidZero - Crawlers -v0.ipynb" ou Arquivo CovidZero_Crawlers_v0.py:
+- 2 - Adicione o link do seu repositório GIT de arquivos({link qui}) e descomente as linhas a abaixo:
+
+de
 ```python
-    #Commit no Git
-    #cp = cmd.run("git add .", check=True, shell=True)
+    #cp = cmd.run("git remote add upstream {link qui}", check=True, shell=True)
+    #cp = cmd.run("git add Estados", check=True, shell=True)
     #cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
-    #cp = cmd.run(f"git push origin crawler_sites -f", check=True, shell=True)
+    #cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
+```
+para
+```python
+    cp = cmd.run("git remote add upstream {link qui}", check=True, shell=True)
+    cp = cmd.run("git add Estados", check=True, shell=True)
+    cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
+    cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
 ```
 
 ## Testando o projeto
