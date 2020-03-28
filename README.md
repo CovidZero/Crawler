@@ -69,12 +69,7 @@ rode o comando abaixo de dentro da pasta raiz do projeto:
 python CovidZero_Crawlers_v0.py
 ```
 
-### TODO:
-- [ ] O resultado(Pasta Estados) deve ser gravado no seguinte repositorio: [Arquivo](https://github.com/CovidZeroNews/Arquivo) 
-
 ### Futuras implementações e melhorias:
-- [ ] Um processo que rode de tempos em tempos realizando um novo sync dos dados(Cron+ Servidor Web) (Pendente)
-- [ ] Refatoração da lógica (Pendente)
 - [ ] Sugestões e melhorias serão aceitos (Sempre Aberto)
 
 > Inspiração:
