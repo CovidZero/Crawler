@@ -45,7 +45,7 @@ para
 #### Salvando no S3
 Para que os arquivos .csv sejam salvos no S3 você precisa:
 - Definir o nome do bucket na variavel `BUCKET_RESULTADO` do arquivo `config.py`
-- Definir as variaveis de ambiente `AWS_ACCESS_KEY_ID`e `AWS_SECRET_ACCESS_KEY` com uma credential que tenha permissão de leitura e exclusão de objetos no bucket
+- Definir as variaveis de ambiente `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` com uma credential que tenha permissão de leitura e escrita de objetos no bucket
 - Executar o comando `python CovidZero_Crawlers_v0.py --salvars3 `
 
 ## Testando o projeto
