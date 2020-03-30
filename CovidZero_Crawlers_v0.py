@@ -127,9 +127,9 @@ def salvar_resultado(url):
     cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
 
 
-def get_url_estado (estado):
+def get_url_estado(estado):
     return LINKS_REPO.format(estado)
-    
+
 
 def get_sites_por_estado(url_estado):
     http = urllib3.PoolManager()
