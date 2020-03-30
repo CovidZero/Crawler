@@ -1,15 +1,3 @@
-<div align="center">
-	<img src="https://github.com/CovidZeroNews/Assets/blob/master/Images/Logo%20em%20PNG/COVID%20ZERO%20-%20Logo%20Horizontal%20-%20Covid%20Cinza@3x.png?raw=true" alt="Awesome">
-	<br>
-	<br>
-	<hr>
-</div>
-<p align="center">
-	<a href="https://covidzero.com.br/">Nosso Site</a>&nbsp;&nbsp;&nbsp;
-	<a href="https://www.instagram.com/covidzerobrasil/">Instagram</a>&nbsp;&nbsp;&nbsp;
-	<a href="https://join.slack.com/t/covidzero/shared_invite/zt-cwf9qixg-yhuPXt3TJVaBvH0Gwig8tQ">Slack</a>&nbsp;&nbsp;&nbsp;
-</p>
-
 ## Pré-requisitos
 - 1 - Ambiente Windows, Linux ou Mac(Python3 (Core) ou Anaconda)
 - 2 - Bibliotecas Python(urllib3, bs4(BeautifulSoup), lxml
@@ -57,20 +45,20 @@ para
 #### Utlizando o Jupyter Notebook
 Abrir o arquivo CovidZero - Crawlers -v0.ipynb e rode.
 
-#### Utilizando python(Core)(Windows)
+#### Utilizando Python(Core)(Windows)
 No cmd rode o comando abaixo:
 ```python
 Abra o cmd e navegue até a pasta raiz do projeto
 python CovidZero_Crawlers_v0.py
 ```
-#### Utilizando python(Core)(Linux) 
+#### Utilizando Python(Core)(Linux) 
 rode o comando abaixo de dentro da pasta raiz do projeto:
 ```python
 python CovidZero_Crawlers_v0.py
 ```
 
-### Futuras implementações e melhorias:
-- [ ] Sugestões e melhorias serão aceitos (Sempre Aberto)
+### Como contribuir para o projeto?
+- Abra uma issue [aqui](https://github.com/CovidZeroNews/Crawler/issues) com sugestões de melhorias.
 
 > Inspiração:
 [**COVIDZERO**:](http://covidzero.com.br/)
