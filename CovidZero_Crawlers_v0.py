@@ -10,6 +10,9 @@ from urllib.parse import urljoin
 import datetime
 import os
 import subprocess as cmd
+import argparse
+from config import PROG_NAME, VERSION, PASTA_LINKS, REPO_URL
+import sys
 
 #Projeto https://covidzero.com.br/
 
@@ -105,10 +108,34 @@ def crawl(paginas, profundidade,diretorio):
                 gravarNoArquivoUrl(pagina,bolso,diretorio)
                     
             print(contador)
+
+def parse_argumentos(args):
+    formatter_class = argparse.RawDescriptionHelpFormatter
+    parser = argparse.ArgumentParser(prog=PROG_NAME,formatter_class=formatter_class)
+
+    parser.add_argument("--version", action="version", version="%(prog)s {}".format(VERSION))
+    parser.add_argument('--salvar', action='store_true', default=False,
+                        help="Indica se o resultado da execução deve ser salvo no respositorio de Arquivos")
+    parser.add_argument('--links', action='store', default=PASTA_LINKS,
+                        help="define o caminho para carregar os links por estado")
+
+    return parser.parse_args(args)
+
+
+def salvar_resultado(url):
+    #Importante adicionar [O upstream]  git remote add upstream {reposiorio de Arquivos}
+    #Commit no Git upstream
+    cp = cmd.run("git remote add upstream {}".format(url), check=True, shell=True)
+    cp = cmd.run("git init", check=True, shell=True)
+    cp = cmd.run("git add Estados", check=True, shell=True)
+    cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
+    cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
             
 if __name__ == '__main__':
     ##Obs se for necessario podemos fazer pela rede tor, para nao entrarmos na black list dos sites
-    path = '.\Estados'
+    args = arguments = parse_argumentos(sys.argv[1:])
+
+    path = args.links
     diretorio = os.listdir(path)
     #print(diretorio)
     for a in diretorio:
@@ -123,11 +150,8 @@ if __name__ == '__main__':
                 #print(pathSub)
                 sites = LerArquivo(fullpath)
                 crawl(sites,1,pathSub)
-    
-    #Importante adicionar [O upstream]  git remote add upstream {reposiorio de Arquivos}
-    #Commit no Git upstream
-    #cp = cmd.run("git remote add upstream {link aqui}", check=True, shell=True)
-    #cp = cmd.run("git add Estados", check=True, shell=True)
-    #cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
-    #cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
 
+    
+    if (args.salvar):
+        salvar_resultado(REPO_URL)
+    
