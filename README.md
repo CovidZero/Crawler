@@ -1,7 +1,6 @@
 ## Pré-requisitos
 - 1 - Ambiente Windows, Linux ou Mac(Python3 (Core) ou Anaconda)
 - 2 - Bibliotecas Python(urllib3, bs4(BeautifulSoup), lxml
-- 3 - Base de [Estados](https://github.com/CovidZeroNews/Arquivo), faça o download e mova para a pasta do Crawler
 
 ## Instalando Python ou Anaconda
 - 1 - [Python3](https://www.python.org/downloads/)
@@ -14,7 +13,7 @@ pip install -r requirements.txt
 
 para baixar o projeto utilizando o git, rode o comando abaixo:
 ```git
-git clone -b crawler_sties {link repository}
+git clone -b crawler_sites {link repository}
 ```
 ## Funcionamento básico do projeto
 - 1 - Estrutura de pastas Coletando - Estados > Arquivo lista_sites.txt - Onde vai conter os links dos sites daquela região
