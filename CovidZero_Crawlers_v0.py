@@ -11,8 +11,9 @@ import datetime
 import os
 import subprocess as cmd
 import argparse
-from config import LINKS_REPO, PROG_NAME, VERSION, PASTA_LINKS, REPO_URL, ESTADOS
+from config import BUCKET_RESULTADO, LINKS_REPO, PROG_NAME, VERSION, PASTA_RESULTADO, REPO_URL, ESTADOS
 import sys
+import boto3
 
 #Projeto https://covidzero.com.br/
 
@@ -111,7 +112,9 @@ def parse_argumentos(args):
     parser.add_argument("--version", action="version", version="%(prog)s {}".format(VERSION))
     parser.add_argument('--salvar', action='store_true', default=False,
                         help="Indica se o resultado da execução deve ser salvo no respositorio de Arquivos")
-    parser.add_argument('--links', action='store', default=PASTA_LINKS,
+    parser.add_argument('--salvars3', action='store_true', default=False,
+                        help="Indica se o resultado da execução deve ser salvo no respositorio de Arquivos") #Refatorar para o salvar ser uma lista de opções
+    parser.add_argument('--links', action='store', default=PASTA_RESULTADO,
                         help="define o caminho para carregar os links por estado")
 
     return parser.parse_args(args)
@@ -131,6 +134,21 @@ def get_url_estado(estado):
     return LINKS_REPO.format(estado)
 
 
+def salvar_no_S3(caminho_arquivos):
+    try:
+        s3_resource = boto3.resource('s3')
+        for root, estados, arquivos in os.walk(caminho_arquivos, topdown=True):
+            for arquivo in arquivos:
+                (base, ext) = os.path.splitext(arquivo)
+                if ext == '.csv':
+                    nome_arquivo = os.path.join(root, arquivo)
+                    key = os.path.join(root.replace('.', ''), arquivo).replace('\\', '/')[1:] 
+                    s3_resource.Bucket(BUCKET_RESULTADO).upload_file(Filename=nome_arquivo, Key=key)
+                    os.remove(nome_arquivo)
+    except:
+        print("Erro ao salvar no S3")    
+
+
 def get_sites_por_estado(url_estado):
     http = urllib3.PoolManager()
     r = http.request('GET', url_estado)
@@ -145,15 +163,17 @@ if __name__ == '__main__':
 
     path = args.links
     diretorio = os.listdir(path)
-
+    
     for estado in ESTADOS:
         url = get_url_estado(estado)
         sites = get_sites_por_estado(url)
 
         pathSub = path + '\\'+ estado
         print('\n**** Crawling noticias de {} ******\n'.format(estado))
-        crawl(sites, 1, pathSub)
-
+        crawl(sites, 1, pathSub)    
+    
+    if (args.salvars3):
+        salvar_no_S3(PASTA_RESULTADO)
     
     if (args.salvar):
         salvar_resultado(REPO_URL)
