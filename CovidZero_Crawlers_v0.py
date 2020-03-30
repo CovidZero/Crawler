@@ -126,6 +126,7 @@ def salvar_resultado(url):
     #Importante adicionar [O upstream]  git remote add upstream {reposiorio de Arquivos}
     #Commit no Git upstream
     cp = cmd.run("git remote add upstream {}".format(url), check=True, shell=True)
+    cp = cmd.run("git init", check=True, shell=True)
     cp = cmd.run("git add Estados", check=True, shell=True)
     cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
     cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
