@@ -11,7 +11,7 @@ import datetime
 import os
 import subprocess as cmd
 import argparse
-from config import PROG_NAME, VERSION, PASTA_LINKS, REPO_URL
+from config import LINKS_REPO, PROG_NAME, VERSION, PASTA_LINKS, REPO_URL, ESTADOS
 import sys
 
 #Projeto https://covidzero.com.br/
@@ -29,6 +29,7 @@ def LerArquivo(subdiretorio):
     print(lista)
     arq.close()
     return lista
+
     
 def gravarNoArquivoUrl(n1,n2,diretorio):
     x = datetime.datetime.now()
@@ -37,6 +38,7 @@ def gravarNoArquivoUrl(n1,n2,diretorio):
     arquivo.write('%s;%s\n' %(n1,n2))
     arquivo.flush()
     arquivo.close()
+
 
 def crawl(paginas, profundidade,diretorio):
     x = datetime.datetime.now()
@@ -47,7 +49,7 @@ def crawl(paginas, profundidade,diretorio):
         novas_paginas = set()
         for pagina in paginas:
             http = urllib3.PoolManager(10,headers=user_agent)
-            #http = urllib3.PoolManager()
+
             try:
                 dados_pagina = http.request('GET',pagina)
             except:
@@ -76,19 +78,12 @@ def crawl(paginas, profundidade,diretorio):
                             print('ok')
 
                 if ('href' in link.attrs):
-                    url = urljoin(pagina, str(link.get('href')))
-                    
-                    #if url != link.get('href'):
-                        #print(url)
-                        #print(link.get('href'))
-                        
+                    url = urljoin(pagina, str(link.get('href')))                    
+
                     if url.find("'") != -1:
-                        continue
-                    
-                    #print(url)
+                        continue                    
+
                     url = url.split('#')[0]
-                    #print(url)
-                    #print('\n')
                     
                     if url[0:4] == 'http' or url[0:5] == 'https':
                         novas_paginas.add(url)
@@ -107,7 +102,7 @@ def crawl(paginas, profundidade,diretorio):
             for bolso in bolsolinks:
                 gravarNoArquivoUrl(pagina,bolso,diretorio)
                     
-            print(contador)
+            print("Total de noticias encontradas {}".format(contador))
 
 def parse_argumentos(args):
     formatter_class = argparse.RawDescriptionHelpFormatter
@@ -130,6 +125,19 @@ def salvar_resultado(url):
     cp = cmd.run("git add Estados", check=True, shell=True)
     cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
     cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
+
+
+def get_url_estado(estado):
+    return LINKS_REPO.format(estado)
+
+
+def get_sites_por_estado(url_estado):
+    http = urllib3.PoolManager()
+    r = http.request('GET', url_estado)
+
+    if (r.status == 200):
+        return str(r.data.decode('utf-8')).split('\n') 
+
             
 if __name__ == '__main__':
     ##Obs se for necessario podemos fazer pela rede tor, para nao entrarmos na black list dos sites
@@ -137,19 +145,14 @@ if __name__ == '__main__':
 
     path = args.links
     diretorio = os.listdir(path)
-    #print(diretorio)
-    for a in diretorio:
-        #print(a)
-        pathSub = path + '\\'+ a
-        subdiretorio =  os.listdir(pathSub)
-        for file in subdiretorio:
-            if 'txt' in file:
-                #print(file)
-                fullpath = pathSub+'\\'+file
-                #print(fullpath)
-                #print(pathSub)
-                sites = LerArquivo(fullpath)
-                crawl(sites,1,pathSub)
+
+    for estado in ESTADOS:
+        url = get_url_estado(estado)
+        sites = get_sites_por_estado(url)
+
+        pathSub = path + '\\'+ estado
+        print('\n**** Crawling noticias de {} ******\n'.format(estado))
+        crawl(sites, 1, pathSub)
 
     
     if (args.salvar):
