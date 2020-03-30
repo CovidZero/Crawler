@@ -57,6 +57,12 @@ rode o comando abaixo de dentro da pasta raiz do projeto:
 python CovidZero_Crawlers_v0.py
 ```
 
+#### Salvando no S3
+Para que os arquivos .csv sejam salvos no S3 você precisa:
+- Definir o nome do bucket na variavel `BUCKET_RESULTADO` do arquivo `config.py`
+- Definir as variaveis de ambiente `AWS_ACCESS_KEY_ID`e `AWS_SECRET_ACCESS_KEY` com uma credential que tenha permissão de leitura e exclusão de objetos no bucket
+- Executar o comando `python CovidZero_Crawlers_v0.py --salvar `
+
 ### Como contribuir para o projeto?
 - Abra uma issue [aqui](https://github.com/CovidZeroNews/Crawler/issues) com sugestões de melhorias.
 
