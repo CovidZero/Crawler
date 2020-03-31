@@ -190,7 +190,7 @@ if __name__ == '__main__':
     ##Obs se for necessario podemos fazer pela rede tor, para nao entrarmos na black list dos sites
     try:
         args = arguments = parse_argumentos(sys.argv[1:])
-        #executa_crawler(args)    
+        executa_crawler(args)    
         
         if (args.salvars3):
             salvar_no_S3(PASTA_RESULTADO)
