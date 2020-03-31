@@ -4,3 +4,5 @@ lxml==4.5.0
 urljoin==1.0.0
 urllib3==1.25.8
 boto3==1.12.26
+aiohttp==3.6.2
+aiodns==2.0.0
