@@ -1,72 +1,62 @@
+<h1 align="center">Bem-vindo ao Crawler 📰🔍👋</h1>
+<p>
+  <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">
+    <img alt="License: Apache--2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
+  </a>
+</p>
+
+> Crawler de notícias relacionado ao COVID-19
+
 ## Pré-requisitos
-- 1 - Ambiente Windows, Linux ou Mac(Python3 (Core) ou Anaconda)
-- 2 - Bibliotecas Python(urllib3, bs4(BeautifulSoup), lxml
+- 1 - Ambiente Windows, Linux ou Mac
+- 2 - [Python3](https://www.python.org/downloads/) ou [Anaconda](https://www.anaconda.com/distribution/)
 
-## Instalando Python ou Anaconda
-- 1 - [Python3](https://www.python.org/downloads/)
-- 2 - [Anaconda](https://www.anaconda.com/distribution/)
+para baixar o projeto utilizando o git, rode o comando abaixo:
 
-## Instalando as bibliotecas adicionais no Python
+```git
+git clone -b crawler_sites https://github.com/CovidZeroNews/Crawler.git
+```
+## Instalando as bibliotecas necessarias
+
 ```python
 pip install -r requirements.txt
 ```
 
-para baixar o projeto utilizando o git, rode o comando abaixo:
-```git
-git clone -b crawler_sites {link repository}
+## Usage
+
 ```
-## Funcionamento básico do projeto
-- 1 - Estrutura de pastas Coletando - Estados > Arquivo lista_sites.txt - Onde vai conter os links dos sites daquela região
-- 2 - Estrutura de pastas Resultado - Estados > Arquivo covidZero_resultado_dia-mês-ano_hora.csv
-- 3 - Jupyter Notebook - Arquivo  CovidZero - Crawlers -v0.ipynb
-- 4 - Python Core - Arquivo CovidZero_Crawlers_v0.py
-
-
-#### Salvando no Git
-##### importante
-- 1 - Arquivos "CovidZero - Crawlers -v0.ipynb" ou Arquivo CovidZero_Crawlers_v0.py:
-- 2 - Adicione o link do seu repositório GIT de arquivos({link qui}) e descomente as linhas a abaixo:
-
-de
-```python
-    #cp = cmd.run("git remote add upstream {link qui}", check=True, shell=True)
-    #cp = cmd.run("git add Estados", check=True, shell=True)
-    #cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
-    #cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
+python CovidZero_Crawlers_v0.py --salvar (Salvando no Git)
 ```
-para
-```python
-    cp = cmd.run("git remote add upstream {link qui}", check=True, shell=True)
-    cp = cmd.run("git add Estados", check=True, shell=True)
-    cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
-    cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
 ```
-- Executar o comando `python CovidZero_Crawlers_v0.py --salvar `
-
-#### Salvando no S3
+python CovidZero_Crawlers_v0.py --salvars3 (Salvando no S3)
+```
+#### OBS
 Para que os arquivos .csv sejam salvos no S3 você precisa:
+
 - Definir o nome do bucket na variavel `BUCKET_RESULTADO` do arquivo `config.py`
 - Definir as variaveis de ambiente `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` com uma credential que tenha permissão de leitura e escrita de objetos no bucket
-- Executar o comando `python CovidZero_Crawlers_v0.py --salvars3 `
 
-## Testando o projeto
-#### Utlizando o Jupyter Notebook
-Abrir o arquivo CovidZero - Crawlers -v0.ipynb e rode.
+***
+## 🤝 Contribuidores
 
-#### Utilizando Python(Core)(Windows)
-No cmd rode o comando abaixo:
-```python
-Abra o cmd e navegue até a pasta raiz do projeto
-python CovidZero_Crawlers_v0.py
-```
-#### Utilizando Python(Core)(Linux) 
-rode o comando abaixo de dentro da pasta raiz do projeto:
-```python
-python CovidZero_Crawlers_v0.py
-```
+👤 **Vinicius Rodrigues**
 
-### Como contribuir para o projeto?
-- Abra uma issue [aqui](https://github.com/CovidZeroNews/Crawler/issues) com sugestões de melhorias.
+* Github: [@Suburbanno](https://github.com/Suburbanno)
 
-> Inspiração:
-[**COVIDZERO**:](http://covidzero.com.br/)
+👤 **Elder Santos**
+
+* Github: [@eldersantos](https://github.com/eldersantos)
+
+👤 **Jaime Ricardo**
+
+* Github: [@jrick166fiap](https://github.com/jrick166fiap)
+***
+## Como contribuir?
+
+Contribuições e solicitações de recursos são bem-vindos!<br />Sinta-se à vontade para abrir uma [issue](https://github.com/CovidZeroNews/Crawler/issues). 
+
+## 📝 Licença
+
+Copyright © 2020 [CovidZero](https://github.com/CovidZero).<br />
+This project is [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0) licensed.
+
