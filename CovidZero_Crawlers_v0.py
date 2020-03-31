@@ -17,6 +17,8 @@ import boto3
 
 #Projeto https://covidzero.com.br/
 
+SITES_COM_PROBLEMAS = []
+
 
 def LerArquivo(subdiretorio):
     x = datetime.datetime.now()
@@ -54,7 +56,8 @@ def crawl(paginas, profundidade,diretorio):
             try:
                 dados_pagina = http.request('GET',pagina)
             except:
-                print('Erro ao abrir a página' + pagina)
+                print('Erro ao abrir a página ' + pagina)
+                SITES_COM_PROBLEMAS.append(pagina)
                 continue
             
             sopa = BeautifulSoup(dados_pagina.data,'lxml')
@@ -105,6 +108,10 @@ def crawl(paginas, profundidade,diretorio):
                     
             print("Total de noticias encontradas {}".format(contador))
 
+    print('Total de sites com problemas {}'.format(len(SITES_COM_PROBLEMAS)))
+    print('Lista de sites com problemas')
+    print('\n'.join(map(str, SITES_COM_PROBLEMAS))) 
+
 def parse_argumentos(args):
     formatter_class = argparse.RawDescriptionHelpFormatter
     parser = argparse.ArgumentParser(prog=PROG_NAME,formatter_class=formatter_class)
@@ -143,10 +150,11 @@ def salvar_no_S3(caminho_arquivos):
                 if ext == '.csv':
                     nome_arquivo = os.path.join(root, arquivo)
                     key = os.path.join(root.replace('.', ''), arquivo).replace('\\', '/')[1:] 
-                    s3_resource.Bucket(BUCKET_RESULTADO).upload_file(Filename=nome_arquivo, Key=key)
+                    #s3_resource.Bucket(BUCKET_RESULTADO).upload_file(Filename=nome_arquivo, Key=key)
                     os.remove(nome_arquivo)
-    except:
-        print("Erro ao salvar no S3")    
+    except Exception as exc:
+        print("Erro ao salvar no S3")
+        print(exc) 
 
 
 def get_sites_por_estado(url_estado):
@@ -154,23 +162,24 @@ def get_sites_por_estado(url_estado):
     r = http.request('GET', url_estado)
 
     if (r.status == 200):
-        return str(r.data.decode('utf-8')).split('\n') 
+        return str(r.data.decode('utf-8')).split('\n')
 
-            
-if __name__ == '__main__':
-    ##Obs se for necessario podemos fazer pela rede tor, para nao entrarmos na black list dos sites
-    args = arguments = parse_argumentos(sys.argv[1:])
 
-    path = args.links
-    diretorio = os.listdir(path)
-    
+def executa_crawler(args):
+    path = args.links 
     for estado in ESTADOS:
         url = get_url_estado(estado)
         sites = get_sites_por_estado(url)
 
         pathSub = path + '\\'+ estado
         print('\n**** Crawling noticias de {} ******\n'.format(estado))
-        crawl(sites, 1, pathSub)    
+        crawl(sites, 1, pathSub)  
+
+            
+if __name__ == '__main__':
+    ##Obs se for necessario podemos fazer pela rede tor, para nao entrarmos na black list dos sites
+    args = arguments = parse_argumentos(sys.argv[1:])
+    #executa_crawler(args)   
     
     if (args.salvars3):
         salvar_no_S3(PASTA_RESULTADO)

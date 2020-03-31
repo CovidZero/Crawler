@@ -12,7 +12,7 @@ LINKS_REPO = 'https://raw.githubusercontent.com/CovidZeroNews/Arquivo/master/Est
 ESTADOS = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
             'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
 
-BUCKET_RESULTADO = 'crawler-noticias'
+BUCKET_RESULTADO = 'crawler-engdados'
 
 #precisa passar
 #AWS_ACCESS_KEY_ID
