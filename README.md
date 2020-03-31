@@ -24,10 +24,10 @@ pip install -r requirements.txt
 
 ## Usage
 
-```python
+```
 python CovidZero_Crawlers_v0.py --salvar (Salvando no Git)
 ```
-```python
+```
 python CovidZero_Crawlers_v0.py --salvars3 (Salvando no S3)
 ```
 #### OBS
