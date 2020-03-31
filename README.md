@@ -41,6 +41,8 @@ para
     cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
     cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
 ```
+- Executar o comando `python CovidZero_Crawlers_v0.py --salvar `
+
 #### Salvando no S3
 Para que os arquivos .csv sejam salvos no S3 você precisa:
 - Definir o nome do bucket na variavel `BUCKET_RESULTADO` do arquivo `config.py`
