@@ -14,10 +14,15 @@ import argparse
 from config import BUCKET_RESULTADO, LINKS_REPO, PROG_NAME, VERSION, PASTA_RESULTADO, REPO_URL, ESTADOS
 import sys
 import boto3
+import aiohttp
+import asyncio
+import time
 
 #Projeto https://covidzero.com.br/
 
 SITES_COM_PROBLEMAS = []
+SITES_VERIFICADOS = []
+start_time = time.time()
 
 
 def LerArquivo(subdiretorio):
@@ -43,74 +48,70 @@ def gravarNoArquivoUrl(n1,n2,diretorio):
     arquivo.close()
 
 
-def crawl(paginas, profundidade,diretorio):
-    x = datetime.datetime.now()
-    data = x.strftime("%Y/%m/%d")
+async def fetch(pagina, novas_paginas, diretorio, estado):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(pagina) as resp:
+            if (resp.status == 200 and ('text/html' in resp.headers.get('content-type'))):
+                data = (await resp.read()).decode('utf-8', 'replace')
+                SITES_VERIFICADOS.append(pagina)
+                return varrendo_pagina(data, pagina, novas_paginas, diretorio, estado)
+                    
+
+def varrendo_pagina(data, pagina, novas_paginas, diretorio, estado):
+    sopa = BeautifulSoup(data,'lxml')
+    print('\n**** Crawling noticias de {} ******\n'.format(estado))
+    print('Url utilizada {}'.format(pagina))
+    bolsolinks = set()
+    links = sopa.find_all('a')
+    contador = 1
+    for link in links:
+
+        if ('title' in link.attrs):
+            title = str(link.get('title').lower())
+            url = urljoin(pagina, str(link.get('href')))
+
+            if title.__contains__('coronavirus') or title.__contains__('COVID-19') or title.__contains__('covid'):
+                if url[-1] == '/':
+                    tamanho = len(url)
+                    url = url[:tamanho-1]
+                bolsolinks.add(url)
+
+        if ('href' in link.attrs):
+            url = urljoin(pagina, str(link.get('href')))                    
+
+            if url.find("'") != -1:
+                continue                    
+
+            url = url.split('#')[0]
+            
+            if url[0:4] == 'http' or url[0:5] == 'https':
+                novas_paginas.add(url)
+                if url.__contains__('coronavirus') or url.__contains__('COVID-19') or url.__contains__('covid'):
+                    if url[-1] == '/':
+                        tamanho = len(url)
+                        url = url[:tamanho-1]
+                    bolsolinks.add(url)
+
+        contador = contador + 1
+
+    for bolso in bolsolinks:
+        gravarNoArquivoUrl(pagina,bolso,diretorio)          
+
+
+async def crawl(estado, paginas, profundidade, diretorio):   
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    user_agent = {'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+
     for i in range(profundidade):
         novas_paginas = set()
         for pagina in paginas:
-            http = urllib3.PoolManager(10,headers=user_agent)
-
             try:
-                dados_pagina = http.request('GET',pagina)
-            except:
+                await fetch(pagina, novas_paginas, diretorio, estado)
+            except Exception as exc:
                 print('Erro ao abrir a página ' + pagina)
+                print (exc)
                 SITES_COM_PROBLEMAS.append(pagina)
                 continue
             
-            sopa = BeautifulSoup(dados_pagina.data,'lxml')
-            
-            bolsolinks = set()
-            links = sopa.find_all('a')
-            contador = 1
-            for link in links:
-
-                if ('title' in link.attrs):
-                    title = str(link.get('title').lower())
-                    url = urljoin(pagina, str(link.get('href')))
-
-                    if title.__contains__('coronavirus') or title.__contains__('COVID-19') or title.__contains__('covid'):
-                        if url[-1] == '/':
-                            tamanho = len(url)
-                            url = url[:tamanho-1]
-                        bolsolinks.add(url)
-                        print(url)
-                        valida = -1
-                        if valida == -1:
-                            print('ok')
-
-                if ('href' in link.attrs):
-                    url = urljoin(pagina, str(link.get('href')))                    
-
-                    if url.find("'") != -1:
-                        continue                    
-
-                    url = url.split('#')[0]
-                    
-                    if url[0:4] == 'http' or url[0:5] == 'https':
-                        novas_paginas.add(url)
-                        if url.__contains__('coronavirus') or url.__contains__('COVID-19') or url.__contains__('covid'):
-                            if url[-1] == '/':
-                                tamanho = len(url)
-                                url = url[:tamanho-1]
-                            bolsolinks.add(url)
-                            print(url)
-                            valida = -1
-                            if valida == -1:
-                                print('ok')
-
-            
-                    contador = contador + 1
-            for bolso in bolsolinks:
-                gravarNoArquivoUrl(pagina,bolso,diretorio)
-                    
-            print("Total de noticias encontradas {}".format(contador))
-
-    print('Total de sites com problemas {}'.format(len(SITES_COM_PROBLEMAS)))
-    print('Lista de sites com problemas')
-    print('\n'.join(map(str, SITES_COM_PROBLEMAS))) 
 
 def parse_argumentos(args):
     formatter_class = argparse.RawDescriptionHelpFormatter
@@ -157,7 +158,8 @@ def salvar_no_S3(caminho_arquivos):
         print(exc) 
 
 
-def get_sites_por_estado(url_estado):
+def get_sites_por_estado(url_estado, estado):
+    print('Buscando urls para o estado {}'.format(estado))
     http = urllib3.PoolManager()
     r = http.request('GET', url_estado)
 
@@ -166,24 +168,39 @@ def get_sites_por_estado(url_estado):
 
 
 def executa_crawler(args):
-    path = args.links 
+    path = args.links
+    tasks = []
+    loop = asyncio.get_event_loop()
     for estado in ESTADOS:
         url = get_url_estado(estado)
-        sites = get_sites_por_estado(url)
+        sites = get_sites_por_estado(url, estado)
+        pathSub = path + '\\'+ estado 
+        tasks.append(loop.create_task(crawl(estado, sites, 1, pathSub)))
 
-        pathSub = path + '\\'+ estado
-        print('\n**** Crawling noticias de {} ******\n'.format(estado))
-        crawl(sites, 1, pathSub)  
+    loop.run_until_complete(asyncio.wait(tasks)) 
+    
+    print('Lista de sites com problemas')
+    print('\n'.join(map(str, SITES_COM_PROBLEMAS)))
+
+    print('*** Total de sites com verificados {}'.format(len(SITES_VERIFICADOS)))
+    print('*** Total de sites com problemas {}'.format(len(SITES_COM_PROBLEMAS)))
 
             
 if __name__ == '__main__':
     ##Obs se for necessario podemos fazer pela rede tor, para nao entrarmos na black list dos sites
-    args = arguments = parse_argumentos(sys.argv[1:])
-    executa_crawler(args)   
-    
-    if (args.salvars3):
-        salvar_no_S3(PASTA_RESULTADO)
-    
-    if (args.salvar):
-        salvar_resultado(REPO_URL)
+    try:
+        args = arguments = parse_argumentos(sys.argv[1:])
+        executa_crawler(args)    
+        
+        if (args.salvars3):
+            salvar_no_S3(PASTA_RESULTADO)
+        
+        if (args.salvar):
+            salvar_resultado(REPO_URL)
+
+        tempo_total = (time.time() - start_time) / 60
+        print('*** Tempo total de execução {:d} minutos'.format(int(tempo_total)))
+
+    except Exception as exc:
+        print(exc)
     
