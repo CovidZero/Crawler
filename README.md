@@ -1,7 +1,6 @@
 ## Pré-requisitos
 - 1 - Ambiente Windows, Linux ou Mac(Python3 (Core) ou Anaconda)
 - 2 - Bibliotecas Python(urllib3, bs4(BeautifulSoup), lxml
-- 3 - Base de [Estados](https://github.com/CovidZeroNews/Arquivo), faça o download e mova para a pasta do Crawler
 
 ## Instalando Python ou Anaconda
 - 1 - [Python3](https://www.python.org/downloads/)
@@ -14,7 +13,7 @@ pip install -r requirements.txt
 
 para baixar o projeto utilizando o git, rode o comando abaixo:
 ```git
-git clone -b crawler_sties {link repository}
+git clone -b crawler_sites {link repository}
 ```
 ## Funcionamento básico do projeto
 - 1 - Estrutura de pastas Coletando - Estados > Arquivo lista_sites.txt - Onde vai conter os links dos sites daquela região
@@ -22,7 +21,9 @@ git clone -b crawler_sties {link repository}
 - 3 - Jupyter Notebook - Arquivo  CovidZero - Crawlers -v0.ipynb
 - 4 - Python Core - Arquivo CovidZero_Crawlers_v0.py
 
-#### IMPORTANTE
+
+#### Salvando no Git
+##### importante
 - 1 - Arquivos "CovidZero - Crawlers -v0.ipynb" ou Arquivo CovidZero_Crawlers_v0.py:
 - 2 - Adicione o link do seu repositório GIT de arquivos({link qui}) e descomente as linhas a abaixo:
 
@@ -40,6 +41,13 @@ para
     cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
     cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
 ```
+- Executar o comando `python CovidZero_Crawlers_v0.py --salvar `
+
+#### Salvando no S3
+Para que os arquivos .csv sejam salvos no S3 você precisa:
+- Definir o nome do bucket na variavel `BUCKET_RESULTADO` do arquivo `config.py`
+- Definir as variaveis de ambiente `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` com uma credential que tenha permissão de leitura e escrita de objetos no bucket
+- Executar o comando `python CovidZero_Crawlers_v0.py --salvars3 `
 
 ## Testando o projeto
 #### Utlizando o Jupyter Notebook
@@ -56,12 +64,6 @@ rode o comando abaixo de dentro da pasta raiz do projeto:
 ```python
 python CovidZero_Crawlers_v0.py
 ```
-
-#### Salvando no S3
-Para que os arquivos .csv sejam salvos no S3 você precisa:
-- Definir o nome do bucket na variavel `BUCKET_RESULTADO` do arquivo `config.py`
-- Definir as variaveis de ambiente `AWS_ACCESS_KEY_ID`e `AWS_SECRET_ACCESS_KEY` com uma credential que tenha permissão de leitura e exclusão de objetos no bucket
-- Executar o comando `python CovidZero_Crawlers_v0.py --salvar `
 
 ### Como contribuir para o projeto?
 - Abra uma issue [aqui](https://github.com/CovidZeroNews/Crawler/issues) com sugestões de melhorias.
