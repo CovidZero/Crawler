@@ -150,7 +150,7 @@ def salvar_no_S3(caminho_arquivos):
                 if ext == '.csv':
                     nome_arquivo = os.path.join(root, arquivo)
                     key = os.path.join(root.replace('.', ''), arquivo).replace('\\', '/')[1:] 
-                    #s3_resource.Bucket(BUCKET_RESULTADO).upload_file(Filename=nome_arquivo, Key=key)
+                    s3_resource.Bucket(BUCKET_RESULTADO).upload_file(Filename=nome_arquivo, Key=key)
                     os.remove(nome_arquivo)
     except Exception as exc:
         print("Erro ao salvar no S3")
@@ -179,7 +179,7 @@ def executa_crawler(args):
 if __name__ == '__main__':
     ##Obs se for necessario podemos fazer pela rede tor, para nao entrarmos na black list dos sites
     args = arguments = parse_argumentos(sys.argv[1:])
-    #executa_crawler(args)   
+    executa_crawler(args)   
     
     if (args.salvars3):
         salvar_no_S3(PASTA_RESULTADO)
