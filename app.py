@@ -38,10 +38,15 @@ def LerArquivo(subdiretorio):
 def gravarNoArquivoUrl(n1,n2,diretorio):
     x = datetime.datetime.now()
     data = x.strftime('%d-%m-%Y_%H')
+    create_directory(diretorio) 
     arquivo = open(diretorio+'\\covidZero_resultado_'+ data+'.csv', 'a',encoding='utf-8')
     arquivo.write('%s;%s\n' %(n1,n2))
     arquivo.flush()
     arquivo.close()
+
+def create_directory(dirName):
+    if not os.path.exists(dirName):
+        os.makedirs(dirName)
 
 async def fetch(pagina, novas_paginas, diretorio, estado):
     async with aiohttp.ClientSession() as session:
