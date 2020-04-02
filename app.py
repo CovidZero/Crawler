@@ -146,7 +146,7 @@ def salvar_no_S3(caminho_arquivos):
                     nome_arquivo = os.path.join(root, arquivo)
                     key = os.path.join(root.replace('.', ''), arquivo).replace('\\', '/')[1:]
                     print ("Salvando arquivo {} no S3".format(nome_arquivo))
-                    s3_resource.Bucket(BUCKET_RESULTADO).upload_file(Filename=nome_arquivo, Key=key)
+                    s3_resource.Bucket(BUCKET_NAME).upload_file(Filename=nome_arquivo, Key=key)
                     os.remove(nome_arquivo)
     except Exception as exc:
         print("Erro ao salvar no S3")
