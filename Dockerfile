@@ -23,4 +23,4 @@ COPY --from=build /usr/local/ /usr/local
 
 USER app
 
-CMD python app.py --savars3
+CMD python app.py --salvars3
