@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  app:
+    build:
+      context: .
+      target: release
+    image: crawler-covidzero
+    volumes: 
+      - ./:/app/
+    command: python /app/app.py --salvar

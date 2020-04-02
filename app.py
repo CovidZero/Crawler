@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-
 # In[12]:
-
 
 import urllib3
 from bs4 import BeautifulSoup
@@ -11,7 +9,7 @@ import datetime
 import os
 import subprocess as cmd
 import argparse
-from config import BUCKET_RESULTADO, LINKS_REPO, PROG_NAME, VERSION, PASTA_RESULTADO, REPO_URL, ESTADOS
+from config import BUCKET_NAME, LINKS_REPO, PROG_NAME, VERSION, PASTA_RESULTADO, REPO_URL, ESTADOS
 import sys
 import boto3
 import aiohttp
@@ -23,7 +21,6 @@ import time
 SITES_COM_PROBLEMAS = []
 SITES_VERIFICADOS = []
 start_time = time.time()
-
 
 def LerArquivo(subdiretorio):
     x = datetime.datetime.now()
@@ -38,7 +35,6 @@ def LerArquivo(subdiretorio):
     arq.close()
     return lista
 
-    
 def gravarNoArquivoUrl(n1,n2,diretorio):
     x = datetime.datetime.now()
     data = x.strftime('%d-%m-%Y_%H')
@@ -47,15 +43,13 @@ def gravarNoArquivoUrl(n1,n2,diretorio):
     arquivo.flush()
     arquivo.close()
 
-
 async def fetch(pagina, novas_paginas, diretorio, estado):
     async with aiohttp.ClientSession() as session:
         async with session.get(pagina) as resp:
             if (resp.status == 200 and ('text/html' in resp.headers.get('content-type'))):
                 data = (await resp.read()).decode('utf-8', 'replace')
                 SITES_VERIFICADOS.append(pagina)
-                return varrendo_pagina(data, pagina, novas_paginas, diretorio, estado)
-                    
+                return varrendo_pagina(data, pagina, novas_paginas, diretorio, estado)                  
 
 def varrendo_pagina(data, pagina, novas_paginas, diretorio, estado):
     sopa = BeautifulSoup(data,'lxml')
@@ -97,7 +91,6 @@ def varrendo_pagina(data, pagina, novas_paginas, diretorio, estado):
     for bolso in bolsolinks:
         gravarNoArquivoUrl(pagina,bolso,diretorio)          
 
-
 async def crawl(estado, paginas, profundidade, diretorio):   
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -112,7 +105,6 @@ async def crawl(estado, paginas, profundidade, diretorio):
                 SITES_COM_PROBLEMAS.append(pagina)
                 continue
             
-
 def parse_argumentos(args):
     formatter_class = argparse.RawDescriptionHelpFormatter
     parser = argparse.ArgumentParser(prog=PROG_NAME,formatter_class=formatter_class)
@@ -127,7 +119,6 @@ def parse_argumentos(args):
 
     return parser.parse_args(args)
 
-
 def salvar_resultado(url):
     #Importante adicionar [O upstream]  git remote add upstream {reposiorio de Arquivos}
     #Commit no Git upstream
@@ -137,10 +128,8 @@ def salvar_resultado(url):
     cp = cmd.run(f'git commit -m "Atualizando"', check=True, shell=True)
     cp = cmd.run(f"git push upstream master -f", check=True, shell=True)
 
-
 def get_url_estado(estado):
     return LINKS_REPO.format(estado)
-
 
 def salvar_no_S3(caminho_arquivos):
     try:
@@ -158,7 +147,6 @@ def salvar_no_S3(caminho_arquivos):
         print("Erro ao salvar no S3")
         print(exc) 
 
-
 def get_sites_por_estado(url_estado, estado):
     print('Buscando urls para o estado {}'.format(estado))
     http = urllib3.PoolManager()
@@ -166,7 +154,6 @@ def get_sites_por_estado(url_estado, estado):
 
     if (r.status == 200):
         return str(r.data.decode('utf-8')).split('\n')
-
 
 def executa_crawler(args):
     path = args.links
@@ -185,7 +172,6 @@ def executa_crawler(args):
 
     print('*** Total de sites com verificados {}'.format(len(SITES_VERIFICADOS)))
     print('*** Total de sites com problemas {}'.format(len(SITES_COM_PROBLEMAS)))
-
             
 if __name__ == '__main__':
     ##Obs se for necessario podemos fazer pela rede tor, para nao entrarmos na black list dos sites

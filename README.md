@@ -25,17 +25,39 @@ pip install -r requirements.txt
 ## Usage
 
 ```
-python CovidZero_Crawlers_v0.py --salvar (Salvando no Git)
+python app.py --salvar (Salvando no Git)
 ```
 ```
-python CovidZero_Crawlers_v0.py --salvars3 (Salvando no S3)
+python app.py --salvars3 (Salvando no S3)
 ```
 #### OBS
 Para que os arquivos .csv sejam salvos no S3 você precisa:
 
-- Definir o nome do bucket na variavel `BUCKET_RESULTADO` do arquivo `config.py`
+- Definir o nome do bucket na variavel `BUCKET_NAME` do arquivo `config.py`
 - Definir as variaveis de ambiente `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` com uma credential que tenha permissão de leitura e escrita de objetos no bucket
 
+## Docker Usage
+
+[Install Docker](https://docs.docker.com/install/)
+
+[Install Docker Compose](https://docs.docker.com/compose/install/)
+
+```
+docker-compose build
+docker-compose up -d
+```
+
+See os logs
+
+```docker
+docker logs -f [container-name]
+```
+
+Stop the Crawler
+
+```
+docker-compose down 
+```
 ***
 ## 🤝 Contribuidores
 
@@ -50,6 +72,10 @@ Para que os arquivos .csv sejam salvos no S3 você precisa:
 👤 **Jaime Ricardo**
 
 * Github: [@jrick166fiap](https://github.com/jrick166fiap)
+
+👤 **Thiago Fortunato**
+
+* Github: [@thiagolsfortunato](https://github.com/thiagolsfortunato)
 ***
 ## Como contribuir?
 
