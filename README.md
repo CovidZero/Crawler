@@ -14,7 +14,7 @@
 para baixar o projeto utilizando o git, rode o comando abaixo:
 
 ```git
-git clone -b crawler_sites https://github.com/CovidZeroNews/Crawler.git
+git clone -b crawler_sites https://github.com/CovidZero/Crawler.git
 ```
 ## Instalando as bibliotecas necessarias
 
@@ -53,7 +53,7 @@ Para que os arquivos .csv sejam salvos no S3 você precisa:
 ***
 ## Como contribuir?
 
-Contribuições e solicitações de recursos são bem-vindos!<br />Sinta-se à vontade para abrir uma [issue](https://github.com/CovidZeroNews/Crawler/issues). 
+Contribuições e solicitações de recursos são bem-vindos!<br />Sinta-se à vontade para abrir uma [issue](https://github.com/CovidZero/Crawler/issues). 
 
 ## 📝 Licença
 
