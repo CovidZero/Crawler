@@ -9,7 +9,7 @@
 
 ## Pré-requisitos
 - 1 - Ambiente Windows, Linux ou Mac
-- 2 - [Python3](https://www.python.org/downloads/) ou [Anaconda](https://www.anaconda.com/distribution/)
+- 2 - [Python3](https://www.python.org/downloads/)
 
 para baixar o projeto utilizando o git, rode o comando abaixo:
 
