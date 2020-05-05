@@ -4,7 +4,7 @@
     <img alt="License: Apache--2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
   </a>
 </p>
-
+# PROJETO ARQUIVADO E FORA DE UTILIZAÇÃO
 > Crawler de notícias relacionado ao COVID-19
 
 ## Pré-requisitos
